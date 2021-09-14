@@ -9,18 +9,27 @@ pipeline {
 	   }
 	   stage('Build Image') {
 	        steps {
-	        sh 'docker build -t mynlpmodel:v2 .'
+	        sh 'docker build -t mynlpmodel:v3 .'
 	        }
 	   }
 	   stage('Run Image') {
 	        steps {
-	        sh 'docker run -d -p 5000:5000 --name nlpmodel mynlpmodel:v2'
+	        sh 'docker run -d -p 5000:5000 --name nlpmodel_2 mynlpmodel:v3'
 	        }
 	   }
-	   stage('Testing'){
-	        steps {
-	            sh 'py.test --junitxml results.xml tests/*.py'
-	            }
-	   }
+	   stage('Test') {
+            agent {
+                docker {
+                    image 'qnib/pytest'
+                }
+            }
+            steps {
+                sh 'py.test --junit-xml test-reports/results.xml tests/*.py'
+            }
+            post {
+                always {
+                    junit 'test-reports/results.xml'
+                }
+            }
     }
 }
