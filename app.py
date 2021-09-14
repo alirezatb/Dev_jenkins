@@ -9,10 +9,10 @@ from sklearn.linear_model import LogisticRegression
 
 
 ## Definitions
-def remove_pattern(input_txt,pattern):
-    r = re.findall(pattern,input_txt)
+def remove_pattern(input_txt, pattern):
+    r = re.findall(pattern, input_txt)
     for i in r:
-        input_txt = re.sub(i,'',input_txt)
+        input_txt = re.sub(i, '', input_txt)
     return input_txt
 def count_punct(text):
     count = sum([1 for char in text if char in string.punctuation])
@@ -22,10 +22,10 @@ def count_punct(text):
 app = Flask(__name__)
 
 
-data = pd.read_csv("sentiment.tsv",sep = '\t')
+data = pd.read_csv("sentiment.tsv", sep='\t')
 data.columns = ["label","body_text"]
 # Features and Labels
-data['label'] = data['label'].map({'pos': 0, 'neg': 1})
+data['label'] = data['label'].map({'pos': 0,'neg': 1})
 data['tidy_tweet'] = np.vectorize(remove_pattern)(data['body_text'],"@[\w]*")
 tokenized_tweet = data['tidy_tweet'].apply(lambda x: x.split())
 stemmer = PorterStemmer()
