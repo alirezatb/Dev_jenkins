@@ -19,7 +19,7 @@ pipeline {
 	   }
 	   stage('Testing'){
 	        steps {
-	            echo 'Testing..'
+	            sh 'py.test --junitxml results.xml tests/*.py'
 	            }
 	   }
     }
